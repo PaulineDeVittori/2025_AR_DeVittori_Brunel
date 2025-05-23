@@ -216,6 +216,53 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!1 &782628375
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 782628377}
+  - component: {fileID: 782628376}
+  m_Layer: 0
+  m_Name: DogManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &782628376
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 782628375}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 665733d05ec59e4458828ef539a66420, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dog: {fileID: 2629182449500102118, guid: 6fd589fb138af5d4bb98e702098a9645, type: 3}
+  food: {fileID: 9119513212501301151, guid: b646eadb82c8fa94e82b654843194f1b, type: 3}
+  eatDistance: 0.5
+--- !u!4 &782628377
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 782628375}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -4.01}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1383173356
 GameObject:
   m_ObjectHideFlags: 0
@@ -290,7 +337,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1383173356}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 958aa5e2bd3cf0f44bccac45c4544e16, type: 3}
   m_Name: 
@@ -565,6 +612,7 @@ GameObject:
   - component: {fileID: 1527037265}
   - component: {fileID: 1527037268}
   - component: {fileID: 1527037269}
+  - component: {fileID: 1527037270}
   m_Layer: 0
   m_Name: AR Session
   m_TagString: Untagged
@@ -671,7 +719,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_SerializedLibrary: {fileID: 11400000, guid: d0c298e2f4de1d1489023e2f70262779, type: 2}
   m_MaxNumberOfMovingImages: 0
-  m_TrackedImagePrefab: {fileID: 2629182449500102118, guid: 15ca4494f24bf9741a48b37ec2c4c632, type: 3}
+  m_TrackedImagePrefab: {fileID: 0}
+--- !u!114 &1527037270
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1527037261}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec9145ec9a28c9b41be8918d19536c6f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_PrefabsList:
+  - imageGuid: 973fa358-f3cd-48d0-bd01-5091916732da
+    imagePrefab: {fileID: 2629182449500102118, guid: 6fd589fb138af5d4bb98e702098a9645, type: 3}
+  - imageGuid: b53de8ee-0900-4c8b-8bc3-7baa776cfcb5
+    imagePrefab: {fileID: 9119513212501301151, guid: b646eadb82c8fa94e82b654843194f1b, type: 3}
+  m_ImageLibrary: {fileID: 11400000, guid: d0c298e2f4de1d1489023e2f70262779, type: 2}
 --- !u!1 &1563318756
 GameObject:
   m_ObjectHideFlags: 0
@@ -913,7 +979,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.1
-  far clip plane: 20
+  far clip plane: 100000
   field of view: 60
   orthographic: 0
   orthographic size: 5
@@ -940,3 +1006,4 @@ SceneRoots:
   - {fileID: 1527037264}
   - {fileID: 1457566433}
   - {fileID: 1383173358}
+  - {fileID: 782628377}
