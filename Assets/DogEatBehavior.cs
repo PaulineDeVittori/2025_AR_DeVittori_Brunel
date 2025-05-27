@@ -1,33 +1,45 @@
 using UnityEngine;
+using UnityEngine.XR.ARFoundation.Samples;
 
 public class DogEatBehavior : MonoBehaviour
 {
-    public GameObject dog;   // À assigner dans l’inspecteur
-    public GameObject food;  // À assigner dans l’inspecteur
-    public float eatDistance = 0.5f;
+    public PrefabImagePairManager prefabImagePairManager;
 
+    public string dogImageName = "chien";      // Nom exact dans la bibliothèque d'images AR pour le chien
+    public string foodImageName = "nourriture";    // Nom exact dans la bibliothèque d'images AR pour la nourriture
+
+    public float eatDistance = 0.5f;               // Distance seuil pour déclencher l'animation
+
+    private Animator dogAnimator;
     private bool hasEaten = false;
 
     void Update()
     {
-        if (dog == null || food == null) return;
-
-        float distance = Vector3.Distance(dog.transform.position, food.transform.position);
-
-        if (distance < eatDistance && !hasEaten)
+        // Récupère les objets instanciés à partir des noms d'image
+        GameObject dog = prefabImagePairManager.GetInstantiatedPrefabByName(dogImageName);
+        GameObject food = prefabImagePairManager.GetInstantiatedPrefabByName(foodImageName);
+        Debug.Log(dog.activeInHierarchy);
+        Debug.Log(food.activeInHierarchy);
+        // Vérifie que les objets existent et sont actifs dans la scène
+        if (dog != null && food != null && dog.activeInHierarchy && food.activeInHierarchy)
         {
-            Animator animator = dog.GetComponent<Animator>();
-            if (animator != null)
+            if (dogAnimator == null)
             {
-                animator.SetTrigger("Eat");
+                dogAnimator = dog.GetComponent<Animator>();
+            }
+
+            float distance = Vector3.Distance(dog.transform.position, food.transform.position);
+
+            if (distance < eatDistance && !hasEaten)
+            {
+                dogAnimator.SetTrigger("Eat");
                 hasEaten = true;
             }
-        }
-
-        // Réinitialiser si la nourriture s’éloigne
-        if (distance > eatDistance + 0.2f)
-        {
-            hasEaten = false;
+            else if (distance >= eatDistance && hasEaten)
+            {
+                // Optionnel : reset du trigger si la nourriture s’éloigne (selon ton besoin)
+                hasEaten = false;
+            }
         }
     }
 }

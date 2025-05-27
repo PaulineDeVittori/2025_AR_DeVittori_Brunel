@@ -226,6 +226,7 @@ GameObject:
   m_Component:
   - component: {fileID: 782628377}
   - component: {fileID: 782628376}
+  - component: {fileID: 782628378}
   m_Layer: 0
   m_Name: DogManager
   m_TagString: Untagged
@@ -240,13 +241,14 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 782628375}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 665733d05ec59e4458828ef539a66420, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dog: {fileID: 2629182449500102118, guid: 6fd589fb138af5d4bb98e702098a9645, type: 3}
-  food: {fileID: 9119513212501301151, guid: b646eadb82c8fa94e82b654843194f1b, type: 3}
+  prefabImagePairManager: {fileID: 1527037270}
+  dogImageName: chien
+  foodImageName: nourriture
   eatDistance: 0.5
 --- !u!4 &782628377
 Transform:
@@ -263,6 +265,24 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &782628378
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 782628375}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7aed536fe06541d498e6cde247427944, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabImagePairManager: {fileID: 1527037270}
+  dogImageName: dog_marker
+  foodImageName: food_marker
+  eatDistance: 0.5
+  eatTriggerName: Eat
+  enableDebug: 1
 --- !u!1 &1383173356
 GameObject:
   m_ObjectHideFlags: 0

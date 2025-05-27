@@ -117,7 +117,22 @@ namespace UnityEngine.XR.ARFoundation.Samples
                 Destroy(instantiatedPrefab);
             }
         }
-
+        public GameObject GetInstantiatedPrefabByName(string imageName)
+        {
+            foreach (var kvp in m_Instantiated)
+            {
+                // Trouve l'image dans la bibliothèque en cherchant par GUID
+                for (int i = 0; i < m_ImageLibrary.count; i++)
+                {
+                    var referenceImage = m_ImageLibrary[i];
+                    if (referenceImage.guid == kvp.Key && referenceImage.name == imageName)
+                    {
+                        return kvp.Value;
+                    }
+                }
+            }
+          return null;
+        }
 
 #if UNITY_EDITOR
         /// <summary>
