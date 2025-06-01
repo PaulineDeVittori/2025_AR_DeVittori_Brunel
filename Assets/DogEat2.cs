@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine;
 using UnityEngine.XR.ARFoundation.Samples;
 
 public class DogEat2 : MonoBehaviour
@@ -41,127 +40,37 @@ public class DogEat2 : MonoBehaviour
     
     void Update()
     {
-        // Vérification de la référence au manager
-        if (prefabImagePairManager == null)
+    if (prefabImagePairManager == null) return;
+
+    GameObject dog = prefabImagePairManager.GetInstantiatedPrefabByName(dogImageName);
+    GameObject food = prefabImagePairManager.GetInstantiatedPrefabByName(foodImageName);
+
+    if (dog != null && food != null && dog.activeInHierarchy && food.activeInHierarchy)
+    {
+        if (dogAnimator == null || lastDogObject != dog)
         {
-            if (enableDebug)
-                Debug.LogWarning("DogEatBehavior: PrefabImagePairManager est null");
-            return;
+            dogAnimator = dog.GetComponent<Animator>() ?? dog.GetComponentInChildren<Animator>();
+            lastDogObject = dog;
         }
-        
-        // Récupère les objets instanciés à partir des noms d'image
-        GameObject dog = prefabImagePairManager.GetInstantiatedPrefabByName(dogImageName);
-        GameObject food = prefabImagePairManager.GetInstantiatedPrefabByName(foodImageName);
-        
-        // Debug : Vérifier si les objets sont trouvés
+
+        float distance = Vector3.Distance(dog.transform.position, food.transform.position);
+
         if (enableDebug)
+            Debug.Log($"Distance = {distance:F2}m (seuil: {eatDistance}m)");
+
+        // *Déclenche l'animation une fois si proche et ne la stoppe jamais*
+        if (distance < eatDistance && !hasEaten)
         {
-            if (dog != lastDogObject)
+            if (dogAnimator != null && HasTrigger(dogAnimator, eatTriggerName))
             {
-                Debug.Log($"DogEatBehavior: Chien trouvé = {(dog != null ? dog.name : "null")}");
-                lastDogObject = dog;
-            }
-            
-            if (food != lastFoodObject)
-            {
-                Debug.Log($"DogEatBehavior: Nourriture trouvée = {(food != null ? food.name : "null")}");
-                lastFoodObject = food;
+                dogAnimator.SetTrigger(eatTriggerName);
+                hasEaten = true;
+                if (enableDebug) Debug.Log($"Animation '{eatTriggerName}' déclenchée !");
             }
         }
-        
-        // Vérifie que les objets existent et sont actifs dans la scène
-        if (dog != null && food != null)
-        {
-            // Vérifier si les objets sont actifs
-            bool dogActive = dog.activeInHierarchy;
-            bool foodActive = food.activeInHierarchy;
-            
-            if (enableDebug && (!dogActive || !foodActive))
-            {
-                Debug.Log($"DogEatBehavior: Chien actif = {dogActive}, Nourriture active = {foodActive}");
-            }
-            
-            if (dogActive && foodActive)
-            {
-                // Récupérer l'Animator si pas encore fait ou si l'objet a changé
-                if (dogAnimator == null || lastDogObject != dog)
-                {
-                    dogAnimator = dog.GetComponent<Animator>();
-                    
-                    // Si pas d'Animator sur l'objet principal, chercher dans les enfants
-                    if (dogAnimator == null)
-                    {
-                        dogAnimator = dog.GetComponentInChildren<Animator>();
-                    }
-                    
-                    if (enableDebug)
-                    {
-                        Debug.Log($"DogEatBehavior: Animator trouvé = {(dogAnimator != null ? "Oui" : "Non")}");
-                    }
-                    
-                    if (dogAnimator == null)
-                    {
-                        Debug.LogError($"DogEatBehavior: Aucun Animator trouvé sur {dog.name} ou ses enfants !");
-                        return;
-                    }
-                }
-                
-                // Calculer la distance
-                float distance = Vector3.Distance(dog.transform.position, food.transform.position);
-                
-                if (enableDebug)
-                {
-                    Debug.Log($"DogEatBehavior: Distance = {distance:F2}m (seuil: {eatDistance}m)");
-                }
-                
-                // Vérifier la distance et déclencher l'animation
-                if (distance < eatDistance && !hasEaten)
-                {
-                    if (dogAnimator != null)
-                    {
-                        // Vérifier si le trigger existe
-                        if (HasTrigger(dogAnimator, eatTriggerName))
-                        {
-                            dogAnimator.SetTrigger(eatTriggerName);
-                            hasEaten = true;
-                            
-                            if (enableDebug)
-                            {
-                                Debug.Log($"DogEatBehavior: Animation '{eatTriggerName}' déclenchée !");
-                            }
-                        }
-                        else
-                        {
-                            Debug.LogError($"DogEatBehavior: Le trigger '{eatTriggerName}' n'existe pas dans l'Animator !");
-                        }
-                    }
-                }
-                else if (distance >= eatDistance && hasEaten)
-                {
-                    // Reset pour permettre une nouvelle animation
-                    hasEaten = false;
-                    
-                    if (enableDebug)
-                    {
-                        Debug.Log("DogEatBehavior: Reset - peut manger à nouveau");
-                    }
-                }
-            }
-        }
-        else
-        {
-            // Reset si les objets ne sont plus disponibles
-            if (hasEaten)
-            {
-                hasEaten = false;
-                dogAnimator = null;
-                
-                if (enableDebug)
-                {
-                    Debug.Log("DogEatBehavior: Objets perdus - reset du state");
-                }
-            }
-        }
+
+        // Ne remet jamais hasEaten à false, donc l'animation ne s'arrête pas
+    }
     }
     
     // Méthode utilitaire pour vérifier si un trigger existe dans l'Animator

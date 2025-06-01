@@ -241,15 +241,17 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 782628375}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 665733d05ec59e4458828ef539a66420, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   prefabImagePairManager: {fileID: 1527037270}
-  dogImageName: chien
-  foodImageName: nourriture
-  eatDistance: 0.5
+  dogImageName: dog_marker
+  ballImageName: ball_marker
+  runDistance: 0.7
+  runTriggerName: Run
+  enableDebug: 1
 --- !u!4 &782628377
 Transform:
   m_ObjectHideFlags: 0
@@ -757,6 +759,8 @@ MonoBehaviour:
     imagePrefab: {fileID: 2629182449500102118, guid: 6fd589fb138af5d4bb98e702098a9645, type: 3}
   - imageGuid: b53de8ee-0900-4c8b-8bc3-7baa776cfcb5
     imagePrefab: {fileID: 9119513212501301151, guid: b646eadb82c8fa94e82b654843194f1b, type: 3}
+  - imageGuid: 6717e1ac-5a39-467b-9e7c-4f50f9dc40c7
+    imagePrefab: {fileID: 4350874406377604858, guid: 888c74eb425ce3f44b5444d8206906b7, type: 3}
   m_ImageLibrary: {fileID: 11400000, guid: d0c298e2f4de1d1489023e2f70262779, type: 2}
 --- !u!1 &1563318756
 GameObject:
