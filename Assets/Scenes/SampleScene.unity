@@ -301,6 +301,8 @@ MonoBehaviour:
   runDistance: 0.7
   runTriggerName: Run
   eatTriggerName: Eat
+  repeatRunCount: 5
+  animationInterval: 1.5
   enableDebug: 1
 --- !u!4 &782628377
 Transform:
@@ -335,6 +337,8 @@ MonoBehaviour:
   eatDistance: 0.5
   eatTriggerName: Eat
   runTriggerName: Run
+  repeatEatCount: 5
+  animationInterval: 1.5
   enableDebug: 1
 --- !u!1 &1383173356
 GameObject:
@@ -750,7 +754,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefabList:
   - {fileID: 5098166735730487887, guid: e1911aeff5cba5f47861e9584df91e0e, type: 3}
-  - {fileID: 4025141361983464341, guid: 28d66e7e8dab6da44af849ea5753aa44, type: 3}
+  - {fileID: 2490277158419471808, guid: 6fdc0fb98b24c0444b5457aad7f9c76c, type: 3}
   - {fileID: 4992434099539113192, guid: d1278bde9795dd444a561ac91d01c74d, type: 3}
 --- !u!114 &1527037267
 MonoBehaviour:
