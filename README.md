@@ -51,14 +51,5 @@ Pour lancer l'application sur un appareil Android :
 - `DogRun.cs` – Gère l'interaction avec la balle (courir)
 - `GrassSpawner.cs` – Génère de l'herbe sur les plans détectés
 
-## Installation de l'application
 
-Pour lancer l'application sur un appareil Android :
-
-1. Transférez le fichier **`build.apk`** sur votre téléphone.
-2. Depuis votre téléphone, ouvrez ce fichier :
-   - Si c’est la première fois que vous installez une application manuellement, Android vous demandera **d’autoriser l’installation d’applications provenant de sources inconnues** (par exemple : depuis Google Drive, depuis votre navigateur, etc.).
-   - Suivez les instructions à l’écran pour accorder cette autorisation (Android vous redirigera automatiquement dans les paramètres).
-3. Une fois autorisé, appuyez sur **"Installer"**.
-4. Une fois l’installation terminée, cliquez sur **"Ouvrir"** ou retrouvez l’application sur votre écran d’accueil.
 
