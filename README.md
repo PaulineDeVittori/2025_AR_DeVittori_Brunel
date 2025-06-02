@@ -51,5 +51,15 @@ Pour lancer l'application sur un appareil Android :
 - `DogRun.cs` – Gère l'interaction avec la balle (courir)
 - `GrassSpawner.cs` – Génère de l'herbe sur les plans détectés
 
+---
+
+## Auteurs
+
+Ce projet a été réalisé par :
+
+- **De Vittori Pauline**
+- **Brunel Adélie**
+
+Dans le cadre d’un projet de Réalité Augmentée — **Année : 2025**
 
 
