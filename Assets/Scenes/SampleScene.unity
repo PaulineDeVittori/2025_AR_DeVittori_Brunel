@@ -146,7 +146,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 223974226}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 404118b3956794e449b6b239ba57eb99, type: 3}
   m_Name: 
@@ -300,6 +300,7 @@ MonoBehaviour:
   ballImageName: ball_marker
   runDistance: 0.7
   runTriggerName: Run
+  eatTriggerName: Eat
   enableDebug: 1
 --- !u!4 &782628377
 Transform:
@@ -333,6 +334,7 @@ MonoBehaviour:
   foodImageName: food_marker
   eatDistance: 0.5
   eatTriggerName: Eat
+  runTriggerName: Run
   enableDebug: 1
 --- !u!1 &1383173356
 GameObject:
@@ -413,7 +415,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 958aa5e2bd3cf0f44bccac45c4544e16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameObjectToInstantiate: {fileID: 2629182449500102118, guid: 15ca4494f24bf9741a48b37ec2c4c632, type: 3}
+  prefabList: []
 --- !u!114 &1383173361
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -741,12 +743,15 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1527037261}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 958aa5e2bd3cf0f44bccac45c4544e16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameObjectToInstantiate: {fileID: 5098166735730487887, guid: e1911aeff5cba5f47861e9584df91e0e, type: 3}
+  prefabList:
+  - {fileID: 5098166735730487887, guid: e1911aeff5cba5f47861e9584df91e0e, type: 3}
+  - {fileID: 4025141361983464341, guid: 28d66e7e8dab6da44af849ea5753aa44, type: 3}
+  - {fileID: 4992434099539113192, guid: d1278bde9795dd444a561ac91d01c74d, type: 3}
 --- !u!114 &1527037267
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -825,7 +830,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_PlanePrefab: {fileID: 751500127624319581, guid: e18378d58fd5cef41afe8bec9b689024, type: 3}
-  m_DetectionMode: -1
+  m_DetectionMode: 1
 --- !u!1 &1563318756
 GameObject:
   m_ObjectHideFlags: 0

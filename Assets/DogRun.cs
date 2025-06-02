@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation.Samples;
 
-
 public class DogRun : MonoBehaviour
 {
     public PrefabImagePairManager prefabImagePairManager;
@@ -13,6 +12,10 @@ public class DogRun : MonoBehaviour
 
     public float runDistance = 0.7f;
     public string runTriggerName = "Run";
+    public string eatTriggerName = "Eat";
+
+    public int repeatRunCount = 5; // 🔁 Nombre de fois que le chien court
+    public float animationInterval = 0f; // ⏱ Délai entre deux animations "Run"
 
     public bool enableDebug = true;
 
@@ -29,14 +32,8 @@ public class DogRun : MonoBehaviour
         GameObject dog = prefabImagePairManager.GetInstantiatedPrefabByName(dogImageName);
         GameObject ball = prefabImagePairManager.GetInstantiatedPrefabByName(ballImageName);
 
-        if (dog == null || ball == null) 
+        if (dog == null || ball == null)
         {
-            if (isRunning)
-            {
-                isRunning = false;
-                if (dogAnimator != null) dogAnimator.ResetTrigger(runTriggerName);
-                if (enableDebug) Debug.Log("DogRunBehavior: Chien ou balle non trouvés, arrêt de la course");
-            }
             return;
         }
 
@@ -60,17 +57,28 @@ public class DogRun : MonoBehaviour
         {
             if (HasTrigger(dogAnimator, runTriggerName))
             {
-                dogAnimator.SetTrigger(runTriggerName);
-                isRunning = true;
-                if (enableDebug) Debug.Log("DogRunBehavior: Animation 'Run' déclenchée");
+                StartCoroutine(PlayRunAnimationRepeatedly());
             }
             else
             {
                 Debug.LogError($"DogRunBehavior: Trigger '{runTriggerName}' absent dans l'Animator");
             }
         }
-        // Note : On ne fait rien pour arrêter la course (pas de reset du trigger),
-        // car tu souhaites que le chien continue de courir sans s'arrêter.
+    }
+
+    IEnumerator PlayRunAnimationRepeatedly()
+    {
+        isRunning = true;
+
+        for (int i = 0; i < repeatRunCount; i++)
+        {
+            dogAnimator.ResetTrigger(eatTriggerName); // Au cas où
+            dogAnimator.SetTrigger(runTriggerName);
+            if (enableDebug) Debug.Log($"Animation 'Run' déclenchée ({i + 1}/{repeatRunCount})");
+            yield return new WaitForSeconds(animationInterval);
+        }
+
+        isRunning = false;
     }
 
     private bool HasTrigger(Animator animator, string triggerName)

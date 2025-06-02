@@ -1,54 +1,70 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 
 [RequireComponent(typeof(ARRaycastManager))]
-public class ARTapToPlaceObject : MonoBehaviour
+public class ARTapToPlaceMultipleObjects : MonoBehaviour
 {
-    public GameObject gameObjectToInstantiate;
-    private GameObject spawnedObject;
+    public List<GameObject> prefabList; // Drag and drop multiple prefabs (plantes) in Inspector
     private ARRaycastManager _arRaycastManager;
-    private Vector2 touchPosition;
+    private GameObject selectedObject;
 
     static List<ARRaycastHit> hits = new List<ARRaycastHit>();
 
-    private void Awake()
+    void Awake()
     {
         _arRaycastManager = GetComponent<ARRaycastManager>();
     }
 
-    bool TryGetTouchPosition(out Vector2 touchPosition)
-    {
-        // Cette fonction permet de détecter lorsque l'utilisateur touche l'écran
-        if (Input.touchCount > 0)
-        {
-            touchPosition = Input.GetTouch(index: 0).position;
-            return true;
-        }
-
-        touchPosition = default;
-        return false;
-    }
-
     void Update()
     {
-        if (!TryGetTouchPosition(out Vector2 touchPosition))
+        if (Input.touchCount == 0)
             return;
 
-        if (_arRaycastManager.Raycast(touchPosition, hits,trackableTypes: TrackableType.PlaneWithinPolygon))
-        {
-            var hitPose = hits[0].pose;
+        Touch touch = Input.GetTouch(0);
 
-            if (spawnedObject == null)
+        Vector2 touchPosition = touch.position;
+
+        if (touch.phase == TouchPhase.Began)
+        {
+            // 1. Sélectionner l'objet si on en touche un
+            Ray ray = Camera.main.ScreenPointToRay(touchPosition);
+            RaycastHit hitObject;
+            if (Physics.Raycast(ray, out hitObject))
             {
-                spawnedObject = Instantiate(gameObjectToInstantiate, hitPose.position, hitPose.rotation);
+                if (hitObject.collider != null)
+                {
+                    selectedObject = hitObject.collider.gameObject;
+                    return;
+                }
             }
-            else
+
+            // 2. Sinon, placer un nouvel objet si on touche le sol
+            if (_arRaycastManager.Raycast(touchPosition, hits, TrackableType.PlaneWithinPolygon))
             {
-                spawnedObject.transform.position = hitPose.position;
+                Pose hitPose = hits[0].pose;
+
+                // Choisir un prefab aléatoire depuis la liste
+                if (prefabList.Count > 0)
+                {
+                    int randomIndex = Random.Range(0, prefabList.Count);
+                    GameObject newObject = Instantiate(prefabList[randomIndex], hitPose.position, hitPose.rotation);
+                }
             }
+        }
+        else if (touch.phase == TouchPhase.Moved && selectedObject != null)
+        {
+            // Déplacement de l'objet sélectionné
+            if (_arRaycastManager.Raycast(touchPosition, hits, TrackableType.PlaneWithinPolygon))
+            {
+                Pose movePose = hits[0].pose;
+                selectedObject.transform.position = movePose.position;
+            }
+        }
+        else if (touch.phase == TouchPhase.Ended)
+        {
+            selectedObject = null;
         }
     }
 }
