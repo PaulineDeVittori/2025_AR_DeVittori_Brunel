@@ -5,135 +5,68 @@ using UnityEngine.XR.ARFoundation.Samples;
 
 public class DogEat2 : MonoBehaviour
 {
-    
     public PrefabImagePairManager prefabImagePairManager;
-    
 
-    public string dogImageName = "dog_marker";      // Nom exact dans la bibliothèque d'images AR pour le chien
-    public string foodImageName = "food_marker";    // Nom exact dans la bibliothèque d'images AR pour la nourriture
-    public float eatDistance = 0.5f;              // Distance seuil pour déclencher l'animation
-    public string eatTriggerName = "Eat";         // Nom du trigger dans l'Animator
-    
+    public string dogImageName = "dog_marker";
+    public string foodImageName = "food_marker";
+    public float eatDistance = 0.5f;
+    public string eatTriggerName = "Eat";
+    public bool enableDebug = true;
 
-    public bool enableDebug = true;               // Activer/désactiver les logs de debug
-    
-    // Variables privées
     private Animator dogAnimator;
-    private bool hasEaten = false;
-    private GameObject lastDogObject;
-    private GameObject lastFoodObject;
-    
-    void Start()
-    {
-        // Vérifications initiales
-        if (prefabImagePairManager == null)
-        {
-            Debug.LogError("DogEatBehavior: PrefabImagePairManager n'est pas assigné !");
-            return;
-        }
-        
-        if (enableDebug)
-        {
-            Debug.Log($"DogEatBehavior: Recherche d'objets avec les noms '{dogImageName}' et '{foodImageName}'");
-        }
-    }
-    
+    private GameObject dog;
+    private GameObject food;
+    private int eatCount = 0;
+    private bool wasInRange = false;
+
     void Update()
     {
-    if (prefabImagePairManager == null) return;
+        if (prefabImagePairManager == null) return;
 
-    GameObject dog = prefabImagePairManager.GetInstantiatedPrefabByName(dogImageName);
-    GameObject food = prefabImagePairManager.GetInstantiatedPrefabByName(foodImageName);
+        dog = prefabImagePairManager.GetInstantiatedPrefabByName(dogImageName);
+        food = prefabImagePairManager.GetInstantiatedPrefabByName(foodImageName);
 
-    if (dog != null && food != null && dog.activeInHierarchy && food.activeInHierarchy)
-    {
-        if (dogAnimator == null || lastDogObject != dog)
-        {
-            dogAnimator = dog.GetComponent<Animator>() ?? dog.GetComponentInChildren<Animator>();
-            lastDogObject = dog;
-        }
+        if (dog == null || food == null || !dog.activeInHierarchy || !food.activeInHierarchy)
+            return;
+
+        if (dogAnimator == null)
+            dogAnimator = dog.GetComponentInChildren<Animator>();
 
         float distance = Vector3.Distance(dog.transform.position, food.transform.position);
+        bool inRange = distance < eatDistance;
 
         if (enableDebug)
-            Debug.Log($"Distance = {distance:F2}m (seuil: {eatDistance}m)");
+            Debug.Log($"Distance: {distance:F2}, inRange: {inRange}, eatCount: {eatCount}");
 
-        // *Déclenche l'animation une fois si proche et ne la stoppe jamais*
-        if (distance < eatDistance && !hasEaten)
+        // Passage de hors portée → en portée
+        if (inRange && !wasInRange)
         {
-            if (dogAnimator != null && HasTrigger(dogAnimator, eatTriggerName))
+            if (eatCount < 3 && HasTrigger(dogAnimator, eatTriggerName))
             {
                 dogAnimator.SetTrigger(eatTriggerName);
-                hasEaten = true;
-                if (enableDebug) Debug.Log($"Animation '{eatTriggerName}' déclenchée !");
+                eatCount++;
+                if (enableDebug) Debug.Log($"Eat déclenché ({eatCount}/3)");
             }
         }
 
-        // Ne remet jamais hasEaten à false, donc l'animation ne s'arrête pas
+        // Passage de en portée → hors portée
+        if (!inRange && wasInRange)
+        {
+            if (enableDebug) Debug.Log("Carte éloignée → on réinitialise eatCount");
+            eatCount = 0;
+        }
+
+        wasInRange = inRange;
     }
-    }
-    
-    // Méthode utilitaire pour vérifier si un trigger existe dans l'Animator
+
     private bool HasTrigger(Animator animator, string triggerName)
     {
-        if (animator == null || animator.runtimeAnimatorController == null)
-            return false;
-            
-        foreach (var parameter in animator.parameters)
-        {
-            if (parameter.name == triggerName && parameter.type == AnimatorControllerParameterType.Trigger)
-            {
+        if (animator == null || animator.runtimeAnimatorController == null) return false;
+
+        foreach (var param in animator.parameters)
+            if (param.name == triggerName && param.type == AnimatorControllerParameterType.Trigger)
                 return true;
-            }
-        }
+
         return false;
-    }
-    
-    // Méthodes publiques pour debug et test
-    public void ForceEat()
-    {
-        if (dogAnimator != null)
-        {
-            dogAnimator.SetTrigger(eatTriggerName);
-            hasEaten = true;
-            Debug.Log("DogEatBehavior: Animation forcée");
-        }
-    }
-    
-    public void ResetEatState()
-    {
-        hasEaten = false;
-        Debug.Log("DogEatBehavior: State reset");
-    }
-    
-    // Affichage de debug dans l'Inspector
-    void OnGUI()
-    {
-        if (enableDebug && Application.isPlaying)
-        {
-            GUILayout.BeginArea(new Rect(10, 10, 300, 200));
-            GUILayout.Label($"Dog Object: {(lastDogObject != null ? lastDogObject.name : "null")}");
-            GUILayout.Label($"Food Object: {(lastFoodObject != null ? lastFoodObject.name : "null")}");
-            GUILayout.Label($"Animator: {(dogAnimator != null ? "Found" : "null")}");
-            GUILayout.Label($"Has Eaten: {hasEaten}");
-            
-            if (lastDogObject != null && lastFoodObject != null)
-            {
-                float dist = Vector3.Distance(lastDogObject.transform.position, lastFoodObject.transform.position);
-                GUILayout.Label($"Distance: {dist:F2}m");
-            }
-            
-            if (GUILayout.Button("Force Eat"))
-            {
-                ForceEat();
-            }
-            
-            if (GUILayout.Button("Reset State"))
-            {
-                ResetEatState();
-            }
-            
-            GUILayout.EndArea();
-        }
     }
 }
